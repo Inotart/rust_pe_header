@@ -26,3 +26,5 @@ Cargo.lock
 # 这只是个测试文件
 a.exe
 a.dll
+rust_pe_header.exe
+mpay.dll
