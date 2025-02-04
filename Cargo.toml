@@ -2,7 +2,13 @@
 name = "rust_pe_header"
 version = "0.1.0"
 edition = "2021"
-
+description = "基于Rust的PE文件头解析库"
+authors = ["Inotart"]
+license = "MIT"
+repository = "https://github.com/Inotart/rust_pe_header"
+homepage = "https://github.com/Inotart/rust_pe_header"
 [dependencies]
-chrono = "0.4.39"
+chrono = "0.4.39"# 日期时间库.仅仅只是看时间
+
+[dev-dependencies]
 rust_dos_header = "0.1.0"
