@@ -1,5 +1,5 @@
 use std::{fs::File, io::Read};
-mod pe;
+use rust_pe_header::pe;
 fn main() {
     // 读取a.exe的内容
     let mut file = File::open("mpay.dll").expect("Failed to open file");

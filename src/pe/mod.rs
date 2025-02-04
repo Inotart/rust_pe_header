@@ -3,6 +3,7 @@ mod encode;
 mod to_print;
 pub mod machine;
 pub mod subsystem;
+pub mod dllcharacteristics;
 pub mod structs;
 pub mod err;
 pub use decode::decode;
