@@ -1,7 +1,7 @@
 use chrono::DateTime;
 
 
-use super::{machine::get_machine_type, structs::{self, word_to_string,word_to_string_32}, subsystem::get_subsystem_type};
+use super::{machine::get_machine_type, structs::{self,word_to_string_32}, subsystem::get_subsystem_type};
 
 pub fn print(header: structs::PEHeader) -> Result<String, Box<dyn std::error::Error>> {
     let mut words = String::new();

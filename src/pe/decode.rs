@@ -231,10 +231,3 @@ fn read_u64_by_vec_u8(raw_date: &Vec<u8>, start: usize) -> u64 {
         raw_date[start + 7],
     ]);
 }
-fn read_move_vec_u18_list_by_vec_u8(raw_date: &Vec<u8>, start: usize, len: usize) -> Vec<u16> {
-    let mut result = Vec::new();
-    for i in 0..len {
-        result.push(read_u16_by_vec_u8(raw_date, start + i * 2));
-    }
-    return result;
-}
