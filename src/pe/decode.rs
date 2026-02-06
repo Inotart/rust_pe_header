@@ -1,4 +1,4 @@
-use super::{machine, structs};
+use super::{structs};
 
 /*
 解析文件中的 pe数据
@@ -11,7 +11,7 @@ pub fn decode(
 ) -> Result<structs::PEHeader, Box<dyn std::error::Error>> {
     let mut pe_header = structs::PEHeader {
         signature: 0,
-        file_header: structs::FileHeader {
+        file_header: structs::file_header::FileHeader {
             machine: 0,
             number_of_sections: 0,
             time_date_stamp: 0,
@@ -20,8 +20,7 @@ pub fn decode(
             size_of_optional_header: 0,
             characteristics: 0,
         },
-        optional_header: None,
-        optional_header64: None,
+        optional_header: structs::optional_header::OptionalHeader::None,
     };
     // 解析 signature
     pe_header.signature = read_u32_by_vec_u8(&date, pe_start);
@@ -37,7 +36,7 @@ pub fn decode(
     let magic = read_u16_by_vec_u8(&date, pe_start + 24);
     match magic {
         0x10b => {
-            let mut optional_header = structs::OptionalHeader {
+            let mut optional_header = structs::optional_header::optional_header32::OptionalHeader32 {
                 magic: 0,
                 major_linker_version: 0,
                 minor_linker_version: 0,
@@ -103,9 +102,9 @@ pub fn decode(
             optional_header.loader_flags = read_u32_by_vec_u8(&date, pe_start + 132-4);
             optional_header.number_of_rva_and_sizes = read_u32_by_vec_u8(&date, pe_start + 136-4);
             // 解析 data_directory
-            let mut data_directory: Vec<structs::DataDirectory> = Vec::new();
+            let mut data_directory: Vec<structs::data_directory::DataDirectory> = Vec::new();
             for ie in 0..16 {
-                let mut data_directory_item = structs::DataDirectory {
+                let mut data_directory_item = structs::data_directory::DataDirectory {
                     virtual_address: 0,
                     size: 0,
                 };
@@ -116,10 +115,10 @@ pub fn decode(
                 data_directory.push(data_directory_item);
             }
             optional_header.data_directory = data_directory;
-            pe_header.optional_header = Some(optional_header);
+            pe_header.optional_header = structs::optional_header::OptionalHeader::OptionalHeader32(optional_header);
         }
         0x20b => {
-            let mut optional_header64 = structs::OptionalHeader64 {
+            let mut optional_header64 = structs::optional_header::optional_header64::OptionalHeader64 {
                 magic: 0,
                 major_linker_version: 0,
                 minor_linker_version: 0,
@@ -183,9 +182,9 @@ pub fn decode(
             optional_header64.loader_flags = read_u32_by_vec_u8(&date, pe_start + 120+8);
             optional_header64.number_of_rva_and_sizes = read_u32_by_vec_u8(&date, pe_start + 124+8);
             // 解析 data_directory
-            let mut data_directory: Vec<structs::DataDirectory> = Vec::new();
+            let mut data_directory: Vec<structs::data_directory::DataDirectory> = Vec::new();
             for ie in 0..16 {
-                let mut data_directory_item = structs::DataDirectory {
+                let mut data_directory_item = structs::data_directory::DataDirectory {
                     virtual_address: 0,
                     size: 0,
                 };
@@ -196,7 +195,7 @@ pub fn decode(
                 data_directory.push(data_directory_item);
             }
             optional_header64.data_directory = data_directory;
-            pe_header.optional_header64 = Some(optional_header64);
+            pe_header.optional_header = structs::optional_header::OptionalHeader::OptionalHeader64(optional_header64);
         }
         _ => {
             // 未知,可能没有
